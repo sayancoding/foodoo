@@ -4,7 +4,6 @@ const Food = require('../models/food.model')
 const mongoose = require('mongoose')
 
 router.get('/',(req,res)=>{
-  console.log(req.query)
   if (Object.keys(req.query).length != 0){
     Food.find({ category: req.query.catId })
       .populate('category', "name")
