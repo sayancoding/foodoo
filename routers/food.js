@@ -4,26 +4,53 @@ const Food = require('../models/food.model')
 const mongoose = require('mongoose')
 
 router.get('/',(req,res)=>{
-  Food.find()
-  .populate('category',"name")
-  .exec()
-  .then(doc=>{
-    if(doc){
-      res.status(200).json({
-        count : doc.length,
-        items : doc
-      })
-    }else{
-      res.status(404).json(
-        {
-          error : "no have items"
+  console.log(req.query)
+  if (Object.keys(req.query).length != 0){
+    Food.find({ category: req.query.catId })
+      .populate('category', "name")
+      .exec()
+      .then(doc => {
+        if (doc) {
+          res.status(200).json({
+            count: doc.length,
+            items: doc
+          })
+        } else {
+          res.status(404).json(
+            {
+              error: "no have items"
+            }
+          )
         }
-      )
-    }
-  })
-  .catch(err=>{
-    res.status.json({error : err})
-  })
+      })
+      .catch(err => {
+        res.status.json({ error: err })
+      })
+  }
+  if (Object.keys(req.query).length === 0)
+  {
+    Food.find()
+      .populate('category', "name")
+      .exec()
+      .then(doc => {
+        if (doc) {
+          res.status(200).json({
+            count: doc.length,
+            items: doc
+          })
+        } else {
+          res.status(404).json(
+            {
+              error: "no have items"
+            }
+          )
+        }
+      })
+      .catch(err => {
+        res.status.json({ error: err })
+      })
+  }
+  
 })
 
 router.post('/',(req,res)=>{
